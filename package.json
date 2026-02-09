@@ -1,0 +1,30 @@
+{
+  "name": "careers-osapiens-e2e",
+  "version": "1.0.0",
+  "description": "Playwright E2E tests for osapiens careers page",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen https://careers.osapiens.com/"
+  },
+  "keywords": [
+    "playwright",
+    "e2e",
+    "testing",
+    "osapiens"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.41.0",
+    "@types/node": "^20.11.0"
+  }
+}
