@@ -31,5 +31,7 @@ export enum Selectors {
 
   jobEntryInEnglish = 'a[href^="/en/postings/"]',
 
+  buttonToRegisterYourInterest = 'a[href="/register-your-interest/new"]',
+
 
 }

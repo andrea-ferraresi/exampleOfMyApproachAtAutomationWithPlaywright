@@ -10,7 +10,7 @@ export class Client {
   public constructor(page: Page, browserName?: string) {
     this.page = page;
     if (browserName) {
-      if (browserName == 'webkit') {
+      if (browserName == 'webkit' || browserName == 'Mobile Chrome') {
         this.browserName = 'web on mobile';
       } else {
         this.browserName = browserName;
@@ -59,7 +59,7 @@ export class Client {
   }
 
   // Career site specific methods
-  async visitCareersPage() {
+  async visitsTheCareersPage() {
     await this.browseTo(Values.careers_url);
     
   }
@@ -87,8 +87,13 @@ export class Client {
 
   async seesThePageIsCorrectlyLoaded() {
     await this.expectPageToHaveURL(Values.careers_url);
+
     //TC_05_verify_company_logo_is_displayed
-    await expect(this.page.locator(Selectors.companyLogo).last()).toBeVisible();
+    if(this.browserName != 'web on mobile') {
+      await expect(this.page.locator(Selectors.companyLogo).last()).toBeVisible();
+    } else {
+      // to be implemented
+    }
 
     await this.expectPageToHaveTitle(Values.pageTitle);
 
@@ -108,12 +113,16 @@ export class Client {
     /*
     The AI suggests to count the jobs by checking the number of elements in the table.
     This is very sensible, but I still prefer to check the href elements, instead.
+    Now, my selector checks for listing in English, so I may need to change the selector 
+    to make it work for jobs in other langages. From this point of view, the AI's solution is more robust, because it does not rely on the language of the job listings.
 
 
     const jobListings = this.page.locator(Selectors.jobListings);
     const count = await jobListings.count();
     console.log(`Found ${count} job listings on the page`);
     */
+
+
     /*
     If the count is 0, it would be a good idea to attempt 
     to click on the buttons to view all the jobs, 
@@ -163,6 +172,37 @@ export class Client {
       }
     }
     expect(found).toBeTruthy();
+  }
+
+  async scrollsToTheBottomOfThePageIfOnMobile() {
+    /*
+    on mobile, we need to wait for the listing to be displayed
+    */
+    if(this.browserName == 'web on mobile') {
+      await this.page.locator(Selectors.buttonToRegisterYourInterest).scrollIntoViewIfNeeded();
+      /*
+      this assertion is not robust at all, it needs to be improved
+      */
+      await expect(this.page.locator(Selectors.jobEntryInEnglish).first()).toBeVisible();
+    }
+  }
+
+  async closesTheCookieBannerIfItAppears() {
+    /*
+    const acceptButton = this.page.locator(`button:has-text("${Values.textOfTheButtonToAcceptAllTheCookies}")`);
+    const rejectButton = this.page.locator(`button:has-text("${Values.textOfTheButtonToRejectAllTheCookies}")`);
+
+    if (await acceptButton.isVisible()) {
+      await acceptButton.click();
+    } else if (await rejectButton.isVisible()) {
+      await rejectButton.click();
+    }
+    */
+    const cookieBannerTitle = this.page.locator(Selectors.titleOfOverlayToAcceptOrRejectCookies);
+    if (await cookieBannerTitle.isVisible()) {
+      await this.page.getByRole('button', {name: Values.textOfTheButtonToAcceptAllTheCookies}).click();
+    }
+
   }
 
 

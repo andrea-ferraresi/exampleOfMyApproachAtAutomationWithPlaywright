@@ -8,8 +8,9 @@ test.describe('osapiens Careers Page Tests', () => {
   test('TC_01_visit_careers_page_and_verify_page_loads', async ({page, browserName}) => {
     const client = new Client(page, browserName);
     
-    await client.visitCareersPage();
+    await client.visitsTheCareersPage();
     await client.seesThePageIsCorrectlyLoaded();
+    await client.closesTheCookieBannerIfItAppears();
     /*
     inline comments which state ideas on how to improve the test
     (more inline comments are in the Client.ts file)
@@ -18,6 +19,11 @@ test.describe('osapiens Careers Page Tests', () => {
     1) it's a good idea to close the cookie banner if it appears, to avoid it interfering with other tests.
     2) it may be useful to compare if the two buttons to view the jobs lead to the same place.
     */
+
+    /*
+    on mobile, we need to wait for the listing to be displayed
+    */
+    await client.scrollsToTheBottomOfThePageIfOnMobile();
     await client.countsTheNumberOfJobOpeningsAndPrintsTheResult()
     await client.failsIfThereIsNoJobTitleContainingTheWord(Values.searchTermQuality);
     
